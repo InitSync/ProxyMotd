@@ -37,7 +37,19 @@ config:
     # will be change the text that show.
     allow-random-lines: true
 
+    # Allow show samples?
+    # If the player place the mouse about the players number,
+    # will be show an text frame.
+    # [!] The text can depend on if the maintenance mode is enabled or not.
+    allow-samples: true
+
+    # Allow fake players?
+    # Here you can set an amount of online players
+    # to show at the servers list.
+    allow-fake-players: true
+
     # Add one player more to online players amount?
+    # [!] This don't works if fake-players is enabled.
     one-player-more: true
 
     # Motd Types.
@@ -48,6 +60,11 @@ config:
         - ""
         - ""
       down:
+        - ""
+        - ""
+        - ""
+        - ""
+      sample:
         - ""
         - ""
         - ""
@@ -63,14 +80,21 @@ config:
         - ""
         - ""
         - ""
+      sample:
+        - ""
+        - ""
+        - ""
+        - ""
 
-    # Set the players number (max) to zero?
+    # Set the players number (max & online) to zero?
     # This happens if the maintenance mode is enabled.
-    # [!] This bypass the players amount set at the config.
+    # [!] This bypass the players amount set at the config (max & online).
     players-to-zero: true
 
     # Max Players Amount:
     max: 7500
+    # Fake Players Amount:
+    online: 7500
 
 messages:
   # To use the prefix, use the variable: '#prefix'.
@@ -78,7 +102,7 @@ messages:
   no-command: "#prefix &cThat command has not been added!"
 
   help:
-    - "&6ProtonMotd (Spigot) &8| &eAvailable Commands."
+    - "&6ProtonMotd (BungeeCord) &8| &eAvailable Commands."
     - "&7 - &a/protonmotd help &fShows this message."
     - "&7 - &a/protonmotd reload &fReload the config."
     - "&7 - &a/protonmotd maintenance &fToggle the maintenance mode."

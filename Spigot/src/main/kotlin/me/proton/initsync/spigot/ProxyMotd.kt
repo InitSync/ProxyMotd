@@ -2,6 +2,7 @@ package me.proton.initsync.spigot
 
 import me.proton.initsync.spigot.commands.PluginCommand
 import me.proton.initsync.spigot.config.ConfigHandler
+import me.proton.initsync.spigot.listeners.ServerPingListener
 import me.proton.initsync.spigot.utils.Log
 import org.bukkit.event.Listener
 import org.bukkit.plugin.PluginManager
@@ -13,23 +14,27 @@ class ProxyMotd: JavaPlugin() {
 	private val pluginManager: PluginManager = server.pluginManager
 	
 	private lateinit var configHandler: ConfigHandler
+	private lateinit var pluginCommand: PluginCommand
 	
 	fun getAuthor(): String { return author }
 	fun getCurrentVersion(): String { return currentVersion }
+	fun getPluginManager(): PluginManager { return pluginManager }
 	fun getConfigHandler(): ConfigHandler { return configHandler }
+	fun getPluginCommand(): PluginCommand { return pluginCommand }
 	
 	override fun onEnable() {
 		// Plugin startup logic
 		
 		val startupTimeAtMillis: Long = System.currentTimeMillis()
 		
-		configHandler = ConfigHandler(
-			this, null, "config.yml", "maintenance.yml"
-		)
+		configHandler = ConfigHandler(this, null, "config.yml")
+		pluginCommand = PluginCommand(this)
 		
-		getCommand("protonmotd")!!.setExecutor(PluginCommand(this))
+		getCommand("protonmotd")?.setExecutor(pluginCommand)
 		
-		Log.levelInfo(null, "Successful loaded &b'" + PluginCommand::class +"' &acommand.")
+		Log.levelInfo(null, "Successful loaded &b'" + pluginCommand.javaClass +"' &acommand.")
+		
+		listeners(ServerPingListener(this))
 		
 		val finalTime = System.currentTimeMillis() - startupTimeAtMillis
 		
@@ -53,5 +58,7 @@ class ProxyMotd: JavaPlugin() {
 	override fun onDisable() {
 		// Plugin shutdown logic
 		
+		Log.levelInfo(null, "Successful unloaded plugin.")
+		Log.levelInfo(null, "&fDeveloped by &e$author &8| &a$currentVersion&f.")
 	}
 }

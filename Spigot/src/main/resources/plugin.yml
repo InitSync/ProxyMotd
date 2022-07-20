@@ -4,6 +4,7 @@ main: me.proton.initsync.spigot.ProxyMotd
 api-version: 1.13
 load: STARTUP
 authors: [ InitDev ]
+depend: [ ProtocolLib ]
 description: Allows modify as the players see your server at the servers list!
 permissions:
   proxymotd.command.*:

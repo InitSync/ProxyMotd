@@ -1,6 +1,7 @@
 package me.proton.initsync.spigot.commands
 
 import me.proton.initsync.spigot.ProxyMotd
+import me.proton.initsync.spigot.api.MaintenanceModeEvent
 import me.proton.initsync.spigot.enums.Configuration
 import me.proton.initsync.spigot.enums.Permissions
 import me.proton.initsync.spigot.utils.Text
@@ -14,31 +15,41 @@ import org.bukkit.entity.Player
 
 class PluginCommand (plugin: ProxyMotd): CommandExecutor {
 	private val plugin: ProxyMotd
+	private val permSound: String
+	private val reloadSound: String
+	private val maintenanceSound: String
+	private val author: String
+	private val version: String
+	private val maintenance: FileConfiguration?
+	private val maintenanceModeEvent: MaintenanceModeEvent
 	
-	init { this.plugin = plugin }
+	init {
+		this.plugin = plugin
+		this.permSound = Configuration.SOUNDS_NO_PERM.getPath()
+		this.reloadSound = Configuration.SOUNDS_RELOAD.getPath()
+		this.maintenanceSound = Configuration.SOUNDS_MAINTENANCE.getPath()
+		this.author = plugin.getAuthor()
+		this.version = plugin.getCurrentVersion()
+		this.maintenance = plugin.getConfigHandler().get("maintenance.yml")
+		this.maintenanceModeEvent = MaintenanceModeEvent(false)
+	}
+	
+	fun getMaintenanceModeEvent(): MaintenanceModeEvent { return maintenanceModeEvent }
 	
 	override fun onCommand(
-		sender: CommandSender,
-		command: Command,
-		label: String,
-		args: Array<out String>
+		 sender: CommandSender,
+		 command: Command,
+		 label: String,
+		 args: Array<out String>
 	): Boolean {
-		val prefix: String = Text.process(Configuration.PREFIX.getPath())
-		val permSound: String = Configuration.SOUNDS_NO_PERM.getPath()
-		val reloadSound: String = Configuration.SOUNDS_RELOAD.getPath()
-		val maintenanceSound: String = Configuration.SOUNDS_MAINTENANCE.getPath()
-		val author: String = plugin.getAuthor()
-		val version: String = plugin.getCurrentVersion()
-		val maintenance: FileConfiguration = plugin.getConfigHandler().get("maintenance.yml")!!
-		
 		if (sender is Player) {
 			val player: Player = sender
 			
 			if (args.isEmpty()) {
 				Utils.message(
-					player,
-					"$prefix &fRunning At &eSpigot &8(&b" + Bukkit.getBukkitVersion() + "&8)&f.",
-					"$prefix &fDeveloped by &a$author &8~ &a$version"
+					 player,
+					"&8[&6ProxyMotd&8] &fRunning At &eSpigot &8(&b" + Bukkit.getBukkitVersion() + "&8)&f.",
+					"&8[&6ProxyMotd&8] &fDeveloped by &a$author &8~ &a$version"
 				)
 				return true
 			}
@@ -49,7 +60,10 @@ class PluginCommand (plugin: ProxyMotd): CommandExecutor {
 					for (string in list) player.sendMessage(string)
 				} else {
 					Utils.play(
-						player, permSound, Configuration.SOUNDS_VOLUME.getFloat(), 1.0.toFloat()
+						 player,
+						 permSound,
+						 Configuration.SOUNDS_VOLUME.getFloat(),
+						 1.0.toFloat()
 					)
 					
 					player.sendMessage(Text.process(Configuration.MESSAGES_NO_PERM.getPath()))
@@ -62,13 +76,19 @@ class PluginCommand (plugin: ProxyMotd): CommandExecutor {
 					plugin.getConfigHandler().reload("config.yml")
 					
 					Utils.play(
-						player, reloadSound, Configuration.SOUNDS_VOLUME.getFloat(), 1.0.toFloat()
+						player,
+						reloadSound,
+						Configuration.SOUNDS_VOLUME.getFloat(),
+						1.0.toFloat()
 					)
 					
 					player.sendMessage(Text.process(Configuration.MESSAGES_RELOAD.getPath()))
 				} else {
 					Utils.play(
-						player, permSound, Configuration.SOUNDS_VOLUME.getFloat(), 1.0.toFloat()
+						 player,
+						 permSound,
+						 Configuration.SOUNDS_VOLUME.getFloat(),
+						 1.0.toFloat()
 					)
 					
 					player.sendMessage(Text.process(Configuration.MESSAGES_NO_PERM.getPath()))
@@ -78,47 +98,67 @@ class PluginCommand (plugin: ProxyMotd): CommandExecutor {
 			
 			if (args[0].equals("maintenance", true)) {
 				if (player.hasPermission(Permissions.COMMAND_MAINTENANCE.getPerm())) {
-					if (maintenance.getBoolean("maintenance")) {
-						maintenance.set("maintenance", false)
-						plugin.getConfigHandler().save("maintenance.yml")
+					plugin.getPluginManager().callEvent(maintenanceModeEvent)
+					if (maintenanceModeEvent.getStatus()) {
+						maintenanceModeEvent.setStatus(false)
+						
+						plugin.getConfigHandler()
+							 .get("maintenance.yml")!!
+							 .set("maintenance", false)
+						plugin.getConfigHandler()
+							 .save("maintenance.yml")
 						
 						Utils.play(
-							player, maintenanceSound, Configuration.SOUNDS_VOLUME.getFloat(), 1.0.toFloat()
+							 player,
+							 maintenanceSound,
+							 Configuration.SOUNDS_VOLUME.getFloat(),
+							 1.0.toFloat()
 						)
 						
 						Utils.sendTitle(
-							player,
-							Configuration.TITLES_FADE_IN.getInt(),
-							Configuration.TITLES_STAY.getInt(),
-							Configuration.TITLES_FADE_OUT.getInt(),
-							Configuration.MESSAGES_MAINTENANCE_TITLE_OFF.getPath(),
-							Configuration.MESSAGES_MAINTENANCE_SUBTITLE_OFF.getPath(),
+							 player,
+							 Configuration.TITLES_FADE_IN.getInt(),
+							 Configuration.TITLES_STAY.getInt(),
+							 Configuration.TITLES_FADE_OUT.getInt(),
+							 Configuration.MESSAGES_MAINTENANCE_TITLE_OFF.getPath(),
+							 Configuration.MESSAGES_MAINTENANCE_SUBTITLE_OFF.getPath(),
 						)
 						
 						player.sendMessage(Text.process(Configuration.MESSAGES_MAINTENANCE_OFF.getPath()))
 						return true
 					}
 					
-					maintenance.set("maintenance", true)
-					plugin.getConfigHandler().save("maintenance.yml")
+					maintenanceModeEvent.setStatus(true)
+					
+					plugin.getConfigHandler()
+						 .get("maintenance.yml")!!
+						 .set("maintenance", true)
+					plugin.getConfigHandler()
+						 .save("maintenance.yml")
 					
 					Utils.play(
-						player, maintenanceSound, Configuration.SOUNDS_VOLUME.getFloat(), 1.0.toFloat()
+						 player,
+						 maintenanceSound,
+						 Configuration.SOUNDS_VOLUME.getFloat(),
+						 1.0.toFloat()
 					)
 					
 					Utils.sendTitle(
-						player,
-						Configuration.TITLES_FADE_IN.getInt(),
-						Configuration.TITLES_STAY.getInt(),
-						Configuration.TITLES_FADE_OUT.getInt(),
-						Configuration.MESSAGES_MAINTENANCE_TITLE_ON.getPath(),
-						Configuration.MESSAGES_MAINTENANCE_SUBTITLE_ON.getPath(),
+						 player,
+						 Configuration.TITLES_FADE_IN.getInt(),
+						 Configuration.TITLES_STAY.getInt(),
+						 Configuration.TITLES_FADE_OUT.getInt(),
+						 Configuration.MESSAGES_MAINTENANCE_TITLE_ON.getPath(),
+						 Configuration.MESSAGES_MAINTENANCE_SUBTITLE_ON.getPath(),
 					)
 					
 					player.sendMessage(Text.process(Configuration.MESSAGES_MAINTENANCE_ON.getPath()))
 				} else {
 					Utils.play(
-						player, permSound, Configuration.SOUNDS_VOLUME.getFloat(), 1.0.toFloat()
+						 player,
+						 permSound,
+						 Configuration.SOUNDS_VOLUME.getFloat(),
+						 1.0.toFloat()
 					)
 					
 					player.sendMessage(Text.process(Configuration.MESSAGES_NO_PERM.getPath()))
@@ -133,8 +173,8 @@ class PluginCommand (plugin: ProxyMotd): CommandExecutor {
 		if (args.isEmpty()) {
 			Utils.message(
 				sender,
-				"$prefix &fRunning At &eSpigot &8(&b" + Bukkit.getBukkitVersion() + "&8)&f.",
-				"$prefix &fDeveloped by &a$author &8~ &a$version"
+				"&8[&6ProxyMotd&8] &fRunning At &eSpigot &8(&b" + Bukkit.getBukkitVersion() + "&8)&f.",
+				"&8[&6ProxyMotd&8] &fDeveloped by &a$author &8~ &a$version"
 			)
 			return true
 		}
@@ -162,16 +202,27 @@ class PluginCommand (plugin: ProxyMotd): CommandExecutor {
 		
 		if (args[0].equals("maintenance", true)) {
 			if (sender.hasPermission(Permissions.COMMAND_MAINTENANCE.getPerm())) {
-				if (maintenance.getBoolean("maintenance")) {
-					maintenance.set("maintenance", false)
-					plugin.getConfigHandler().save("maintenance.yml")
+				plugin.getPluginManager().callEvent(maintenanceModeEvent)
+				if (maintenanceModeEvent.getStatus()) {
+					maintenanceModeEvent.setStatus(false)
+					
+					plugin.getConfigHandler()
+						 .get("maintenance.yml")!!
+						 .set("maintenance", false)
+					plugin.getConfigHandler()
+						 .save("maintenance.yml")
 					
 					sender.sendMessage(Text.process(Configuration.MESSAGES_MAINTENANCE_OFF.getPath()))
 					return true
 				}
 				
-				maintenance.set("maintenance", true)
-				plugin.getConfigHandler().save("maintenance.yml")
+				maintenanceModeEvent.setStatus(true)
+				
+				plugin.getConfigHandler()
+					 .get("maintenance.yml")!!
+					 .set("maintenance", true)
+				plugin.getConfigHandler()
+					 .save("maintenance.yml")
 				
 				sender.sendMessage(Text.process(Configuration.MESSAGES_MAINTENANCE_ON.getPath()))
 			} else {

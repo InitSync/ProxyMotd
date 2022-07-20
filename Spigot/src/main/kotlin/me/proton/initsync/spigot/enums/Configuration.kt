@@ -19,14 +19,14 @@ enum class Configuration (path: String) {
 	
 	MOTD_ALLOWED ("config.motd.allow"),
 	MOTD_ALLOWED_RANDOM ("config.motd.allow-random-lines"),
-	MOTD_ALLOWED_SAMPLES ("config.motd.allow-samples"),
+	MOTD_ALLOWED_ONE ("config.motd.one-player-more"),
 	MOTD_COMMON_UP ("config.motd.common.up"),
 	MOTD_COMMON_DOWN ("config.motd.common.down"),
 	MOTD_COMMON_SAMPLE ("config.motd.common.sample"),
 	MOTD_MAINTENANCE_UP ("config.motd.maintenance.up"),
 	MOTD_MAINTENANCE_DOWN ("config.motd.maintenance.down"),
 	MOTD_MAINTENANCE_SAMPLE ("config.motd.maintenance.sample"),
-	MOTD_ALLOWED_PLAYERS ("config.motd.players-to-zero"),
+	MOTD_PLAYERS_ZERO ("config.motd.players-to-zero"),
 	MOTD_MAX_PLAYERS ("config.motd.max"),
 	MOTD_ONLINE_PLAYERS ("config.motd.online"),
 	
