@@ -1,0 +1,17 @@
+name: ProxyMotd
+version: 1.0.0
+main: me.proton.initsync.spigot.ProxyMotd
+api-version: 1.13
+load: STARTUP
+authors: [ InitDev ]
+description: Allows modify as the players see your server at the servers list!
+permissions:
+  proxymotd.command.*:
+    children:
+      proxymotd.command.help: true
+      proxymotd.command.reload: true
+      proxymotd.command.maintenance: true
+commands:
+  proxymotd:
+    description: -> Command to manage the plugin.
+    aliases:  [ pm ]

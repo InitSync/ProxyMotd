@@ -1,0 +1,108 @@
+# ProxyMotd - Running At Spigot.
+# Developed by InitDev | Version ~ 1.0.0
+# [!] Some features of bungee-cord version is not available at this release.
+config:
+  # Prefix for the messages.
+  prefix: "&8[&6ProxyMotd&8]"
+
+  sounds:
+    # Allow replay sounds?
+    # This sounds can be customized.
+    allow: true
+
+    # [!] Can view distint sounds at: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+    no-perm: ENTITY_ITEM_BREAK
+    reload: UI_BUTTON_CLICK
+    maintenance: ENTITY_EXPERIENCE_ORB_PICKUP
+
+    # Volume level (Float).
+    volume-level: 1.0
+
+  titles:
+    # Allow send titles?
+    # This titles can be customized.
+    allow: true
+
+    # Titles Time Parameters.
+    fade-in: 20
+    stay: 60
+    fade-out: 20
+
+  motd:
+    # Allow use the New Motd System?
+    allow: true
+
+    # Allow use random lines at the motd?
+    # Every time than the motd be update
+    # will be change the text that show.
+    allow-random-lines: true
+
+    # Allow show samples?
+    # If the player place the mouse about the players number,
+    # will be show an text frame.
+    # [!] The text can depend on if the maintenance mode is enabled or not.
+    allow-samples: true
+
+    # Motd Types.
+    common:
+      up:
+        - ""
+        - ""
+        - ""
+        - ""
+      down:
+        - ""
+        - ""
+        - ""
+        - ""
+      sample:
+        - ""
+        - ""
+        - ""
+        - ""
+    maintenance:
+      up:
+        - ""
+        - ""
+        - ""
+        - ""
+      down:
+        - ""
+        - ""
+        - ""
+        - ""
+      sample:
+        - ""
+        - ""
+        - ""
+        - ""
+
+    # Set the players number (max & online) to zero?
+    # This happens if the maintenance mode is enabled.
+    # [!] This bypass the players amount set at the config (max & online).
+    players-to-zero: true
+
+    # Max Players Amount:
+    max: 7500
+    # Online Players Amount:
+    online: 3545
+
+messages:
+  # To use the prefix, use the variable: '#prefix'.
+  no-perm: "#prefix &cYou don't have permission for that!"
+  no-command: "#prefix &cThat command has not been added!"
+
+  help:
+    - "&6ProtonMotd (Spigot) &8| &eAvailable Commands."
+    - "&7 - &a/protonmotd help &fShows this message."
+    - "&7 - &a/protonmotd reload &fReload the config."
+    - "&7 - &a/protonmotd maintenance &fToggle the maintenance mode."
+
+  reload: "#prefix &aThe plugin configuration has been reloaded successful!"
+
+  maintenance-on: "#prefix &eMaintenance Mode: &aON"
+  maintenance-off: "#prefix &eMaintenance Mode: &cOFF"
+  maintenance-title-on: "&6&lMAINTENANCE"
+  maintenance-subtitle-on: "&fThe maintenance has been &eactivated&f."
+  maintenance-title-off: "&6&lMAINTENANCE"
+  maintenance-subtitle-off: "&fThe maintenance has been &edisabled&f."
