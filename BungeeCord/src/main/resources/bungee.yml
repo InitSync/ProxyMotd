@@ -1,0 +1,5 @@
+name: ProxyMotd
+main: me.proton.initsync.bungeecord.ProxyMotd
+version: 1.0.0
+author: InitDev
+description: Allows modify as the players see your server at the servers list!

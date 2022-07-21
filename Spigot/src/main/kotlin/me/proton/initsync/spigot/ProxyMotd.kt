@@ -1,6 +1,7 @@
 package me.proton.initsync.spigot
 
 import me.proton.initsync.spigot.commands.PluginCommand
+import me.proton.initsync.spigot.commands.TabComplete
 import me.proton.initsync.spigot.config.ConfigHandler
 import me.proton.initsync.spigot.listeners.ServerPingListener
 import me.proton.initsync.spigot.utils.Log
@@ -27,18 +28,22 @@ class ProxyMotd: JavaPlugin() {
 		
 		val startupTimeAtMillis: Long = System.currentTimeMillis()
 		
-		configHandler = ConfigHandler(this, null, "config.yml")
+		configHandler = ConfigHandler(this, null,
+			"config.yml",
+			"maintenance.yml"
+		)
 		pluginCommand = PluginCommand(this)
 		
-		getCommand("protonmotd")?.setExecutor(pluginCommand)
+		getCommand("proxymotd")?.setExecutor(pluginCommand)
+		getCommand("proxymotd")?.tabCompleter = TabComplete()
 		
-		Log.levelInfo(null, "Successful loaded &b'" + pluginCommand.javaClass +"' &acommand.")
+		Log.levelInfo(null, "Successful loaded &b'PluginCommand.class' &acommand.")
 		
 		listeners(ServerPingListener(this))
 		
 		val finalTime = System.currentTimeMillis() - startupTimeAtMillis
 		
-		Log.levelInfo(null, "Successful loaded plugin at &e'$finalTime'&a.")
+		Log.levelInfo(null, "Successful loaded plugin at &e'$finalTime'ms&a.")
 		Log.levelInfo(null, "&fDeveloped by &e$author &8| &a$currentVersion&f.")
 	}
 	
@@ -51,7 +56,9 @@ class ProxyMotd: JavaPlugin() {
 		for (listener in listeners) {
 			pluginManager.registerEvents(listener, this)
 			
-			Log.levelInfo(null, "Successful loaded &b'" + listener.javaClass +"' &aevent.")
+			val className: String = listener.javaClass.simpleName
+			
+			Log.levelInfo(null, "Successful loaded &b'$className.class' &aevent.")
 		}
 	}
 	

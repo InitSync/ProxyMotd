@@ -1,22 +1,9 @@
 # ProxyMotd - Running At Spigot.
 # Developed by InitDev | Version ~ 1.0.0
-# [!] Some features of bungee-cord version is not available at this release.
+# [!] Some features of spigot version is not available at this release.
 config:
   # Prefix for the messages.
   prefix: "&8[&6ProxyMotd&8]"
-
-  sounds:
-    # Allow replay sounds?
-    # This sounds can be customized.
-    allow: true
-
-    # [!] Can view distint sounds at: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-    no-perm: ENTITY_ITEM_BREAK
-    reload: UI_BUTTON_CLICK
-    maintenance: ENTITY_EXPERIENCE_ORB_PICKUP
-
-    # Volume level (Float).
-    volume-level: 1.0
 
   titles:
     # Allow send titles?
