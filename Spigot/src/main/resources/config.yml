@@ -32,37 +32,28 @@ config:
     # Allow use the New Motd System?
     allow: true
 
-    # Allow use random lines at the motd?
-    # Every time than the motd be update
-    # will be change the text that show.
+    # Allow random lines?
+    # Every time what the player update the servers list,
+    # will be change the motd lines.
     allow-random-lines: true
 
-    # Add one player more to online players amount?
+    # Add one player more to max players amount every time that some join? Ex: 5/6 => 6/7
+    # [!] This bypass the max-players amount set at the config.
     one-player-more: true
 
     # Motd Types.
     common:
       up:
-        - ""
-        - ""
-        - ""
-        - ""
+        - "     &6&lProxyMotd &8| &aCustomizable MOTD for your Server!"
+        - "          &6&lProxyMotd &8| &fDeveloped by &eInitDev"
+        - "        &6&lProxyMotd &8| &fSupport for &7[1.8 - 1.19]"
       down:
-        - ""
-        - ""
-        - ""
-        - ""
+        - "                      &bCustomize the MOTD!"
+        - "                    &aInvite to your Friends!"
+        - "                   &fAvailable At: &eSpigotMC"
     maintenance:
-      up:
-        - ""
-        - ""
-        - ""
-        - ""
-      down:
-        - ""
-        - ""
-        - ""
-        - ""
+      up: [ "        &6&lProxyMotd &8| &fSupport for &7[1.8 - 1.19]" ]
+      down: [ "              &cWe are under maintenance!" ]
 
     # Set the players number (max) to zero?
     # This happens if the maintenance mode is enabled.

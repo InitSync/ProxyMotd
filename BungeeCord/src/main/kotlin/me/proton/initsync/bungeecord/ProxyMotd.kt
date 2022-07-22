@@ -1,6 +1,8 @@
 package me.proton.initsync.bungeecord
 
+import me.proton.initsync.bungeecord.commands.PluginCommand
 import me.proton.initsync.bungeecord.config.ConfigHandler
+import me.proton.initsync.bungeecord.listeners.ProxyPingListener
 import me.proton.initsync.bungeecord.utils.Log
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.api.plugin.Plugin
@@ -13,11 +15,14 @@ class ProxyMotd: Plugin() {
 	private val config: ConfigHandler = ConfigHandler(this, "bungee_config.yml")
 	private val maintenance: ConfigHandler = ConfigHandler(this, "maintenance.yml")
 	
+	private lateinit var pluginCommand: PluginCommand
+	
 	fun getAuthor(): String { return author }
 	fun getCurrentVersion(): String { return currentVersion }
 	fun getPluginManager(): PluginManager { return pluginManager }
 	fun getConfiguration(): ConfigHandler { return config }
 	fun getMaintenance(): ConfigHandler { return maintenance }
+	fun getPluginCommand(): PluginCommand { return pluginCommand }
 	
 	override fun onEnable() {
 		// Plugin startup logic
@@ -29,9 +34,17 @@ class ProxyMotd: Plugin() {
 		maintenance.create()
 		maintenance.load()
 		
+		pluginCommand = PluginCommand(this)
+		
+		pluginManager.registerCommand(this, pluginCommand)
+		
+		Log.levelInfo(this, null, "Successful loaded &b'PluginCommand.class' &acommand.")
+		
+		listeners(ProxyPingListener(this))
+		
 		val finalTime = System.currentTimeMillis() - startupTimeAtMillis
 		
-		Log.levelInfo(this, null, "Successful loaded plugin at &e'$finalTime'&a.")
+		Log.levelInfo(this, null, "Successful loaded plugin at &e'$finalTime'ms&a.")
 		Log.levelInfo(this, null, "&fDeveloped by &e$author &8| &a$currentVersion&f.")
 	}
 	
@@ -44,9 +57,7 @@ class ProxyMotd: Plugin() {
 		for (listener in listeners) {
 			pluginManager.registerListener(this, listener)
 			
-			val className: String = listener.javaClass
-				 .simpleName
-				 .split(".")[4]
+			val className: String = listener.javaClass.simpleName
 			
 			Log.levelInfo(this, null, "Successful loaded &b'$className.class' &aevent.")
 		}

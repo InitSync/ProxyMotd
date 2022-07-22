@@ -18,17 +18,14 @@ enum class Configuration (path: String) {
 	TITLES_FADE_OUT ("config.titles.fade-out"),
 	
 	MOTD_ALLOWED ("config.motd.allow"),
-	MOTD_ALLOWED_RANDOM ("config.motd.allow-random-lines"),
 	MOTD_ALLOWED_ONE ("config.motd.one-player-more"),
+	MOTD_ALLOWED_RANDOM ("config.motd.allow-random-lines"),
 	MOTD_COMMON_UP ("config.motd.common.up"),
 	MOTD_COMMON_DOWN ("config.motd.common.down"),
-	MOTD_COMMON_SAMPLE ("config.motd.common.sample"),
 	MOTD_MAINTENANCE_UP ("config.motd.maintenance.up"),
 	MOTD_MAINTENANCE_DOWN ("config.motd.maintenance.down"),
-	MOTD_MAINTENANCE_SAMPLE ("config.motd.maintenance.sample"),
 	MOTD_PLAYERS_ZERO ("config.motd.players-to-zero"),
 	MOTD_MAX_PLAYERS ("config.motd.max"),
-	MOTD_ONLINE_PLAYERS ("config.motd.online"),
 	
 	MESSAGES_NO_PERM ("messages.no-perm"),
 	MESSAGES_NO_COMMAND ("messages.no-command"),
@@ -50,37 +47,38 @@ enum class Configuration (path: String) {
 	init { this.path = path }
 	
 	fun getPath(): String {
-		val prefix: String? = plugin.getConfigHandler()
-			.get("config.yml")!!
-			.getString("config.prefix")
+		val prefix: String = plugin.getConfigHandler()
+			 .get("config.yml")!!
+			 .getString("config.prefix")!!
 		
 		return plugin.getConfigHandler()
-			.get("config.yml")!!
-			.getString(path)!!.replace("#prefix", prefix!!)
+			 .get("config.yml")!!
+			 .getString(path)!!
+			 .replace("#prefix", prefix)
 	}
 	
 	fun getInt(): Int {
 		return plugin.getConfigHandler()
-			.get("config.yml")!!
-			.getInt(path)
+			 .get("config.yml")!!
+			 .getInt(path)
 	}
 	
 	fun getFloat(): Float {
 		return plugin.getConfigHandler()
-			.get("config.yml")!!
-			.getInt(path)
-			.toFloat()
+			 .get("config.yml")!!
+			 .getInt(path)
+			 .toFloat()
 	}
 	
 	fun getList(): List<String> {
 		return plugin.getConfigHandler()
-			.get("config.yml")!!
-			.getStringList(path)
+			 .get("config.yml")!!
+			 .getStringList(path)
 	}
 	
 	fun check(): Boolean {
 		return plugin.getConfigHandler()
-			.get("config.yml")!!
-			.getBoolean(path)
+			 .get("config.yml")!!
+			 .getBoolean(path)
 	}
 }

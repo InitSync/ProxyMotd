@@ -11,7 +11,7 @@ class Text {
 		
 		fun process(collection: Collection<String>): List<String> {
 			return collection.stream()
-				.map { string -> process(string) }
+				.map { process(it) }
 				.toList()
 		}
 	}

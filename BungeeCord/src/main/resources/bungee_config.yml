@@ -19,9 +19,9 @@ config:
     # Allow use the New Motd System?
     allow: true
 
-    # Allow use random lines at the motd?
-    # Every time than the motd be update
-    # will be change the text that show.
+    # Allow random lines?
+    # Every time what the player update the servers list,
+    # will be change the motd lines.
     allow-random-lines: true
 
     # Allow show samples?
@@ -35,41 +35,31 @@ config:
     # to show at the servers list.
     allow-fake-players: true
 
-    # Add one player more to online players amount?
-    # [!] This don't works if fake-players is enabled.
+    # Add one player more to max players amount every time that some join? Ex: 5/6 => 6/7
+    # [!] This bypass the max-players amount set at the config.
     one-player-more: true
 
     # Motd Types.
     common:
       up:
-        - ""
-        - ""
-        - ""
-        - ""
+        - "       &6&k &6&lProxyMotd &8| &eBungeeCord Version! &6&k"
+        - "          &6&lProxyMotd &8| &fDeveloped by &eInitDev"
+        - "        &6&lProxyMotd &8| &fSupport for &7[1.8 - 1.19]"
       down:
-        - ""
-        - ""
-        - ""
-        - ""
+        - "                      &bCustomize the MOTD!"
+        - "                    &aInvite to your Friends!"
+        - "                   &fAvailable At: &eSpigotMC"
       sample:
-        - ""
-        - ""
+        - "a"
+        - "a"
         - ""
         - ""
     maintenance:
-      up:
-        - ""
-        - ""
-        - ""
-        - ""
-      down:
-        - ""
-        - ""
-        - ""
-        - ""
+      up: [ "        &6&lProxyMotd &8| &fSupport for &7[1.8 - 1.19]" ]
+      down: [ "              &cWe are under maintenance!" ]
       sample:
-        - ""
-        - ""
+        - "a"
+        - "a"
         - ""
         - ""
 
@@ -81,7 +71,12 @@ config:
     # Max Players Amount:
     max: 7500
     # Fake Players Amount:
-    online: 7500
+    online: 4530
+
+    # Protocol Version to show.
+    # Use by the client to know if the server version is same version.
+    # More information at: https://minecraft.gamepedia.com/Protocol_version
+    protocol-version: -503
 
 messages:
   # To use the prefix, use the variable: '#prefix'.
@@ -93,8 +88,6 @@ messages:
     - "&7 - &a/protonmotd help &fShows this message."
     - "&7 - &a/protonmotd reload &fReload the config."
     - "&7 - &a/protonmotd maintenance &fToggle the maintenance mode."
-
-  reload: "#prefix &aThe plugin configuration has been reloaded successful!"
 
   maintenance-on: "#prefix &eMaintenance Mode: &aON"
   maintenance-off: "#prefix &eMaintenance Mode: &cOFF"
